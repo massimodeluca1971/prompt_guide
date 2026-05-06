@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Prompt Guide"/>
+<meta name="theme-color" content="#1a3a2a"/>
+<title>Guida al Prompt Perfetto</title>
+<style>
+:root {
+  --green:#1a3a2a; --green-dark:#0f2219; --green-light:#e2f7ef; --green-mid:#2d6a4f;
+  --card:#ffffff; --border:#dde8e3; --bg:#f2f7f4; --text:#1a2520; --sub:#6a857a;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bot:env(safe-area-inset-bottom,0px);
+  --blu:#1a3554; --blu-light:#e6f1fb;
+  --ara:#5c2d00; --ara-light:#fce4d6;
+  --ros:#7b1a1a; --ros-light:#fadadd;
+  --gia:#4a3800; --gia-light:#fff2cc;
+  --vio:#4a1a6e; --vio-light:#ede0f7;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --green:#2d6a4f; --green-dark:#1a3a2a; --green-light:#0d2a1a; --green-mid:#3d8a64;
+    --card:#1c2820; --border:#2a3d32; --bg:#121e18; --text:#e8f2ec; --sub:#7aab90;
+    --blu:#2563a8; --blu-light:#0a1f38;
+    --ara:#c06000; --ara-light:#2a1400;
+    --ros:#c0392b; --ros-light:#2d1212;
+    --gia:#b8860b; --gia-light:#2a1e04;
+    --vio:#8b3fc4; --vio-light:#1a0a2e;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;
+  overflow:hidden;-webkit-font-smoothing:antialiased}
+#root{display:flex;flex-direction:column;height:100%;max-width:430px;margin:0 auto;background:var(--bg)}
+
+/* TOPBAR */
+.topbar{background:var(--card);border-bottom:0.5px solid var(--border);
+  padding:calc(var(--safe-top) + 14px) 16px 14px;flex-shrink:0;z-index:20;
+  box-shadow:0 1px 8px rgba(26,58,42,.08)}
+.topbar h1{font-size:17px;font-weight:800;color:var(--green-mid);letter-spacing:.01em}
+.topbar p{font-size:12px;color:var(--sub);margin-top:2px}
+
+/* SCROLL */
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.scroll-area::-webkit-scrollbar{display:none}
+
+/* TEMPLATE BTN */
+.template-btn{display:flex;align-items:center;gap:12px;margin:14px 16px 0;
+  padding:14px 16px;background:var(--card);border-radius:16px;
+  border:2px solid var(--green-mid);box-shadow:0 4px 14px rgba(26,58,42,.12);cursor:pointer}
+.template-btn:active{opacity:.84}
+.template-btn .t-ico{font-size:1.6rem;flex-shrink:0}
+.template-btn .t-txt{flex:1}
+.template-btn .t-tit{font-size:14px;font-weight:800;color:var(--green-mid)}
+.template-btn .t-sub{font-size:12px;color:var(--sub);margin-top:2px}
+.template-btn .t-arr{font-size:1.2rem;color:var(--green-mid);flex-shrink:0}
+
+/* HINT */
+.hint{margin:10px 16px 0;background:var(--card);border-radius:12px;padding:10px 14px;
+  font-size:12px;color:var(--sub);text-align:center;line-height:1.5}
+.hint strong{color:var(--green-mid)}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px 24px}
+.nodo{background:var(--card);border-radius:16px;border:1px solid var(--border);
+  padding:16px 12px 14px;cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;gap:6px;text-align:center;min-height:96px;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.nodo:active{transform:scale(.96);opacity:.88}
+.nodo .ico{font-size:2rem;line-height:1}
+.nodo .tit{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.nodo .sub{font-size:11px;color:var(--sub);line-height:1.3}
+.nodo{color:#fff !important}
+.nodo .tit{color:#fff !important}
+.nodo .sub{color:rgba(255,255,255,.82) !important}
+.nodo.n1{background:linear-gradient(135deg,#1a3a2a,#2d6a4f);border-color:#1a3a2a}
+.nodo.n2{background:linear-gradient(135deg,#1a3554,#2563a8);border-color:#1a3554}
+.nodo.n3{background:linear-gradient(135deg,#5c2d00,#c06000);border-color:#5c2d00}
+.nodo.n4{background:linear-gradient(135deg,#4a1a6e,#8b3fc4);border-color:#4a1a6e}
+.nodo.n5{background:linear-gradient(135deg,#7b1a1a,#c0392b);border-color:#7b1a1a}
+.nodo.n6{background:linear-gradient(135deg,#1a4a3a,#27ae60);border-color:#1a4a3a}
+.nodo.n7{background:linear-gradient(135deg,#1a3a4a,#1a7cb0);border-color:#1a3a4a}
+.nodo.n8{background:linear-gradient(135deg,#4a3800,#b8860b);border-color:#4a3800}
+.nodo.n9{background:linear-gradient(135deg,#2d1a4a,#6a3db0);border-color:#2d1a4a}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,.68);z-index:1000;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;padding:0 0 calc(var(--safe-bot) + 20px)}
+.modal-overlay.open{display:block}
+.modal-box{background:var(--card);max-width:430px;margin:calc(var(--safe-top) + 20px) auto 0;
+  border-radius:22px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.32)}
+.modal-head{padding:16px 16px 14px;color:#fff;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.modal-head h2{font-size:16px;font-weight:800;line-height:1.2}
+.modal-head p{font-size:12px;opacity:.88;margin-top:3px}
+.btn-close{flex-shrink:0;width:34px;height:34px;border-radius:17px;
+  background:rgba(255,255,255,.22);color:#fff;font-size:16px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;
+  font-family:inherit}
+.btn-close:active{background:rgba(255,255,255,.42)}
+.modal-body{padding:14px 14px 20px;display:flex;flex-direction:column;gap:11px}
+
+/* BOX */
+.box{border-radius:14px;padding:13px}
+.bx-verde{background:var(--green-light);border-left:4px solid var(--green-mid)}
+.bx-blu{background:var(--blu-light);border-left:4px solid var(--blu)}
+.bx-arancio{background:var(--ara-light);border-left:4px solid var(--ara)}
+.bx-rosso{background:var(--ros-light);border-left:4px solid var(--ros)}
+.bx-giallo{background:var(--gia-light);border-left:4px solid var(--gia)}
+.bx-viola{background:var(--vio-light);border-left:4px solid var(--vio)}
+.box h3{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
+.box p{font-size:13px;line-height:1.6;color:var(--text);margin-bottom:4px}
+.box ul,.box ol{padding-left:18px}
+.box li{font-size:13px;line-height:1.75;color:var(--text)}
+
+/* CARDS */
+.cards{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.card{background:var(--card);border-radius:10px;padding:10px 12px;border:1px solid var(--border)}
+.card .cl{font-size:11px;font-weight:700;color:var(--green-mid);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.card .cv{font-size:13px;color:var(--text);line-height:1.5}
+
+/* PROMPT BOX */
+.prompt-box{background:#111a15;border-radius:12px;padding:13px 14px;
+  font-family:"Menlo","Monaco","Courier New",monospace;font-size:12px;
+  line-height:1.75;color:#c8e8d4;white-space:pre-wrap;word-break:break-word;
+  margin-top:4px}
+.ph{color:#74d7a0;font-weight:700}
+.val{color:#ffd580}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:7px}
+.chk-item{background:var(--card);border-radius:12px;padding:11px 13px;
+  border:1px solid var(--border);display:flex;align-items:flex-start;gap:9px}
+.chk-ico{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.chk-txt{font-size:13px;color:var(--text);line-height:1.5}
+.chk-txt strong{color:var(--green-mid);display:block;font-size:12px;margin-bottom:2px}
+
+/* COPIA BTN */
+.btn-copia{display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:16px;background:var(--green-mid);color:#fff;
+  border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;
+  font-family:inherit;min-height:54px;letter-spacing:.01em;
+  box-shadow:0 4px 14px rgba(26,58,42,.22)}
+.btn-copia:active{background:var(--green-dark);transform:scale(.98)}
+.btn-copia.copiato{background:#27ae60}
+
+/* CHIUDI */
+.btn-chiudi{display:block;width:100%;padding:15px;background:var(--green);color:#fff;
+  text-align:center;border-radius:14px;font-weight:700;font-size:15px;
+  cursor:pointer;border:none;font-family:inherit;min-height:54px;letter-spacing:.01em}
+.btn-chiudi:active{background:var(--green-dark)}
+
+/* FOOTER */
+.footer{text-align:center;color:var(--sub);font-size:11px;padding:0 16px 16px;line-height:1.6}
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="topbar">
+    <h1>🎯 Guida al Prompt Perfetto</h1>
+    <p>8 elementi · HR, Legal &amp; AI · consultazione rapida</p>
+  </div>
+
+  <div class="scroll-area">
+    <div class="template-btn" onclick="openModal('template')">
+      <span class="t-ico">📋</span>
+      <span class="t-txt">
+        <div class="t-tit">Template completo</div>
+        <div class="t-sub">Schema assemblato — copia e compila</div>
+      </span>
+      <span class="t-arr">›</span>
+    </div>
+
+    <div class="hint"><strong>Tocca un elemento</strong> per spiegazione, regole ed esempi</div>
+
+    <div class="grid">
+      <div class="nodo n1" onclick="openModal('ruolo')">
+        <span class="ico">🎭</span>
+        <span class="tit">1 · Ruolo</span>
+        <span class="sub">Chi è l'AI per questo task</span>
+      </div>
+      <div class="nodo n2" onclick="openModal('contesto')">
+        <span class="ico">🗺️</span>
+        <span class="tit">2 · Contesto</span>
+        <span class="sub">Scenario, azienda, persone</span>
+      </div>
+      <div class="nodo n3" onclick="openModal('compito')">
+        <span class="ico">🎯</span>
+        <span class="tit">3 · Compito</span>
+        <span class="sub">Cosa fare, precisamente</span>
+      </div>
+      <div class="nodo n4" onclick="openModal('output')">
+        <span class="ico">📄</span>
+        <span class="tit">4 · Output</span>
+        <span class="sub">Formato, struttura, lunghezza</span>
+      </div>
+      <div class="nodo n5" onclick="openModal('vincolip')">
+        <span class="ico">✅</span>
+        <span class="tit">5 · Vincoli +</span>
+        <span class="sub">Cosa includere sempre</span>
+      </div>
+      <div class="nodo n6" onclick="openModal('vincoln')">
+        <span class="ico">🚫</span>
+        <span class="tit">6 · Vincoli −</span>
+        <span class="sub">Cosa NON fare mai</span>
+      </div>
+      <div class="nodo n7" onclick="openModal('ambig')">
+        <span class="ico">❓</span>
+        <span class="tit">7 · Ambiguità</span>
+        <span class="sub">Cosa fare se non è chiaro</span>
+      </div>
+      <div class="nodo n8" onclick="openModal('workflow')">
+        <span class="ico">🔄</span>
+        <span class="tit">8 · Workflow</span>
+        <span class="sub">Bozza · Approvazione · Finale</span>
+      </div>
+      <div class="nodo n9" onclick="openModal('errori')" style="grid-column:1/-1;flex-direction:row;text-align:left;gap:12px;justify-content:flex-start;min-height:auto;padding:14px 16px;color:#fff">
+        <span class="ico">⚠️</span>
+        <div>
+          <div class="tit" style="text-align:left">Errori Comuni</div>
+          <div class="sub" style="text-align:left">I 6 errori che abbassano il voto</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">Guida al Prompt Perfetto · Massimo De Luca<br>HR · Legal · AI Consulting · Maggio 2026</div>
+  </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- TEMPLATE -->
+<div class="modal-overlay" id="modal-template">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#1a3a2a,#2d6a4f)">
+    <div><h2>📋 Template Completo</h2><p>Compila ogni sezione — elimina quelle non necessarie</p></div>
+    <button class="btn-close" onclick="closeModal('template')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="box bx-verde">
+      <h3>🔧 Come usarlo</h3>
+      <p>Copia il blocco con il tasto verde, incollalo nella chat e compila ogni sezione tra [parentesi]. Le sezioni <strong>Ruolo, Contesto, Compito</strong> sono sempre obbligatorie.</p>
+    </div>
+    <div class="prompt-box"><span class="ph">RUOLO:</span>
+<span class="val">Agisci come [es. esperto HR senior / avvocato giuslavorista / DPO / consulente AI Act].</span>
+
+<span class="ph">CONTESTO:</span>
+<span class="val">[Settore, dimensione azienda, situazione specifica, stakeholder coinvolti, criticità da tenere presente].</span>
+
+<span class="ph">COMPITO:</span>
+<span class="val">[Cosa deve produrre o analizzare l'AI. Se è una sequenza, elenca i passi in ordine].</span>
+
+<span class="ph">FORMATO OUTPUT:</span>
+<span class="val">[Tipo documento · struttura attesa · lunghezza indicativa · sezioni obbligatorie].</span>
+
+<span class="ph">VINCOLI POSITIVI:</span>
+<span class="val">[Tono richiesto e perché · riferimenti normativi · elementi obbligatori].</span>
+
+<span class="ph">VINCOLI NEGATIVI:</span>
+<span class="val">[Cosa NON scrivere · termini da evitare · approcci da escludere].</span>
+
+<span class="ph">GESTIONE AMBIGUITÀ:</span>
+<span class="val">Se un'informazione è insufficiente o un caso è classificabile in più modi, segnalalo prima di procedere. Non generalizzare: indica cosa ti manca.</span>
+
+<span class="ph">WORKFLOW:</span>
+<span class="val">Produci prima una bozza. Attendi la mia approvazione prima di procedere con l'output finale.</span></div>
+    <div class="box bx-giallo">
+      <h3>💡 Regola d'oro</h3>
+      <p>Il prompt deve funzionare anche senza storia pregressa della conversazione. Se tolgo tutto il contesto precedente, l'AI deve capire tutto lo stesso.</p>
+    </div>
+    <button class="btn-copia" id="btnCopia" onclick="copiaTemplate()">
+      <span id="copiaTxt">📋 Copia il template</span>
+    </button>
+    <button class="btn-chiudi" onclick="closeModal('template')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<!-- RUOLO -->
+<div class="modal-overlay" id="modal-ruolo">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#1a3a2a,#2d6a4f)">
+    <div><h2>🎭 1 · Ruolo</h2><p>Chi è l'AI per questo specifico task</p></div>
+    <button class="btn-close" onclick="closeModal('ruolo')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="box bx-verde">
+      <h3>📌 Perché è il primo elemento</h3>
+      <p>Il ruolo attiva il "frame mentale" del modello: cambia vocabolario, livello di tecnicità e punto di vista. Un avvocato e un comunicatore guardano lo stesso problema in modo completamente diverso.</p>
+      <p style="margin-top:6px"><strong>Formula:</strong> "Agisci come [titolo specifico + specializzazione]"</p>
+    </div>
+    <div class="box bx-blu">
+      <h3>✅ Regole</h3>
+      <ul>
+        <li>Sii specifico: non "esperto" ma "HR Director con esperienza in relazioni industriali"</li>
+        <li>Combina competenze se servono: "avvocato giuslavorista e DPO"</li>
+        <li>Il ruolo deve essere coerente col compito</li>
+        <li>Aggiungi il destinatario: "che parla a manager, non a tecnici"</li>
+      </ul>
+    </div>
+    <div class="box bx-arancio">
+      <h3>⚡ Esempi dal tuo contesto</h3>
+      <div class="cards">
+        <div class="card"><div class="cl">HR e relazioni sindacali</div><div class="cv">Agisci come HR Director senior con esperienza in relazioni industriali e gestione crisi sindacali nel facility management.</div></div>
+        <div class="card"><div class="cl">Compliance AI Act</div><div class="cv">Agisci come consulente AI Act (Reg. UE 2024/1689) e DPO, con esperienza nel settore HR.</div></div>
+        <div class="card"><div class="cl">Formazione manageriale</div><div class="cv">Agisci come formatore aziendale esperto in change management, con approccio pratico su casi reali.</div></div>
+      </div>
+    </div>
+    <div class="box bx-rosso">
+      <h3>🚫 Errori frequenti</h3>
+      <ul>
+        <li>"Agisci come esperto" → troppo generico, nessun frame attivato</li>
+        <li>Ruolo in contrasto col compito</li>
+        <li>Dimenticare il ruolo in prompt lunghi</li>
+      </ul>
+    </div>
+    <button class="btn-chiudi" onclick="closeModal('ruolo')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<!-- CONTESTO -->
+<div class="modal-overlay" id="modal-contesto">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#1a3554,#2563a8)">
+    <div><h2>🗺️ 2 · Contesto</h2><p>Lo scenario completo in cui opera l'AI</p></div>
+    <button class="btn-close" onclick="closeModal('contesto')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="box bx-blu">
+      <h3>📌 Cos'è</h3>
+      <p>Il briefing che daresti a un consulente esterno al primo incontro. Chi siamo, in che situazione, chi è coinvolto, quali sono le criticità. Non è narrativa — è informazione funzionale.</p>
+    </div>
+    <div class="box bx-verde">
+      <h3>✅ Le 5 domande del contesto perfetto</h3>
+      <div class="cards">
+        <div class="card"><div class="cl">Chi siamo</div><div class="cv">Settore, dimensione, struttura (es. "azienda manifatturiera, 200 dipendenti, sindacalizzata")</div></div>
+        <div class="card"><div class="cl">Situazione</div><div class="cv">Cosa sta succedendo, quale problema affrontare</div></div>
+        <div class="card"><div class="cl">Stakeholder</div><div class="cv">A chi è destinato l'output, chi lo leggerà, chi è impattato</div></div>
+        <div class="card"><div class="cl">Criticità</div><div class="cv">Cosa può andare storto, quali tensioni esistono</div></div>
+        <div class="card"><div class="cl">Vincoli di contesto</div><div class="cv">Accordi esistenti, normative già note, posizioni già prese</div></div>
+      </div>
+    </div>
+    <div class="box bx-rosso">
+      <h3>🚫 Errori frequenti</h3>
+      <ul>
+        <li>Contesto troppo vago: "azienda di medie dimensioni" non dice nulla</li>
+        <li>Omettere le criticità: l'AI non sa della tensione sindacale</li>
+        <li>Contesto ridondante: ogni dettaglio deve servire al compito</li>
+      </ul>
+    </div>
+    <button class="btn-chiudi" onclick="closeModal('contesto')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<!-- COMPITO -->
+<div class="modal-overlay" id="modal-compito">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#5c2d00,#c06000)">
+    <div><h2>🎯 3 · Compito</h2><p>Cosa deve fare l'AI — con precisione chirurgica</p></div>
+    <button class="btn-close" onclick="closeModal('compito')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="box bx-arancio">
+      <h3>📌 Cos'è</h3>
+      <p>L'istruzione operativa. Deve rispondere a: <strong>cosa produrre</strong> e <strong>come farlo</strong>. Non "aiutami con X" ma "fai esattamente X seguendo questi passi".</p>
+    </div>
+    <div class="box bx-verde">
+      <h3>✅ Regole</h3>
+      <ul>
+        <li>Usa verbi d'azione: <em>analizza, classifica, redigi, confronta, sintetizza</em></li>
+        <li>Specifica il livello di dettaglio atteso</li>
+        <li>Per task a fasi: numerale e metti un'istruzione per passaggio</li>
+        <li>Per task multi-fase: usa il chain prompting (prompt separati)</li>
+      </ul>
+    </div>
+    <div class="box bx-blu">
+      <h3>⚡ Esempi</h3>
+      <div class="cards">
+        <div class="card"><div class="cl">Task semplice</div><div class="cv">Redigi un comunicato interno di massimo 300 parole per annunciare il sistema di rilevazione presenze.</div></div>
+        <div class="card"><div class="cl">Task strutturato</div><div class="cv">1) Analizza i dati trattati. 2) Classifica i sistemi AI Act. 3) Produci piano d'azione. Completa ogni fase prima di passare alla successiva.</div></div>
+      </div>
+    </div>
+    <button class="btn-chiudi" onclick="closeModal('compito')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<!-- OUTPUT -->
+<div class="modal-overlay" id="modal-output">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#4a1a6e,#8b3fc4)">
+    <div><h2>📄 4 · Formato Output</h2><p>Struttura, lunghezza, tipo documento</p></div>
+    <button class="btn-close" onclick="closeModal('output')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="box bx-viola">
+      <h3>📌 Perché è critico</h3>
+      <p>Senza specifiche sull'output, l'AI sceglie il formato che ritiene più probabile. Spesso sbaglia. Definire il formato è la differenza tra un output usabile e uno da riscrivere da capo.</p>
+    </div>
+    <div class="box bx-verde">
+      <h3>✅ Le 4 dimensioni</h3>
+      <div class="cards">
+        <div class="card"><div class="cl">Tipo documento</div><div class="cv">Comunicato · Email · Tabella · Quiz · Report · Checklist · Lettera · Verbale</div></div>
+        <div class="card"><div class="cl">Struttura</div><div class="cv">Sezioni obbligatorie, ordine, titoli, intestazione, firma</div></div>
+        <div class="card"><div class="cl">Lunghezza</div><div class="cv">"200-300 parole" oppure "massimo 1 pagina A4" o "5-7 punti per sezione"</div></div>
+        <div class="card"><div class="cl">Formalità</div><div class="cv">Formale istituzionale · professionale accessibile · tecnico · colloquiale</div></div>
+      </div>
+    </div>
+    <div class="box bx-rosso">
+      <h3>🚫 Errori frequenti</h3>
+      <ul>
+        <li>"Documento Word" non basta — specifica struttura e lunghezza</li>
+        <li>Non indicare il destinatario dell'output</li>
+        <li>Dimenticare di specificare intestazione, firma, numerazione</li>
+      </ul>
+    </div>
+    <button class="btn-chiudi" onclick="closeModal('output')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<!-- VINCOLI POSITIVI -->
+<div class="modal-overlay" id="modal-vincolip">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#7b1a1a,#c0392b)">
+    <div><h2>✅ 5 · Vincoli Positivi</h2><p>Cosa l'AI deve includere sempre</p></div>
+    <button class="btn-close" onclick="closeModal('vincolip')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="box bx-rosso">
+      <h3>📌 Cos'è</h3>
+      <p>Gli elementi obbligatori dell'output: tono, riferimenti normativi, elementi strutturali. Dicono all'AI cosa non può dimenticare.</p>
+    </div>
+    <div class="box bx-verde">
+      <h3>✅ Tipi di vincoli positivi</h3>
+      <div class="cards">
+        <div class="card"><div class="cl">Tono motivato</div><div class="cv">Non "tono rassicurante" — ma "rassicurante perché i dipendenti hanno espresso malcontento; allo stesso tempo fermo per non lasciare spazio ad ambiguità"</div></div>
+        <div class="card"><div class="cl">Riferimenti normativi</div><div class="cv">"Cita il Reg. UE 2024/1689 con gli articoli specifici" · "Usa solo fonti ufficiali verificabili"</div></div>
+        <div class="card"><div class="cl">Elementi obbligatori</div><div class="cv">"Includi sempre il riferimento al sistema on/off per la privacy" · "Ogni domanda del quiz deve indicare il riferimento normativo"</div></div>
+      </div>
+    </div>
+    <div class="box bx-giallo">
+      <h3>💡 Regola pratica</h3>
+      <p>Chiediti: "Se l'AI dimenticasse questo, l'output sarebbe inutilizzabile?" Se sì → è un vincolo positivo da esplicitare.</p>
+    </div>
+    <button class="btn-chiudi" onclick="closeModal('vincolip')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<!-- VINCOLI NEGATIVI -->
+<div class="modal-overlay" id="modal-vincoln">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#1a4a3a,#27ae60)">
+    <div><h2>🚫 6 · Vincoli Negativi</h2><p>Il gap più sottovalutato — e più impattante</p></div>
+    <button class="btn-close" onclick="closeModal('vincoln')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="box bx-verde">
+      <h3>📌 Perché è il gap più comune</h3>
+      <p>La maggior parte dei prompt dice all'AI cosa fare, ma non cosa evitare. In contesti sindacali, legali o istituzionali un termine sbagliato può vanificare l'intero output.</p>
+    </div>
+    <div class="box bx-blu">
+      <h3>✅ Tipi di vincoli negativi</h3>
+      <div class="cards">
+        <div class="card"><div class="cl">Termini da evitare</div><div class="cv">"Non usare le parole: sorveglianza, monitoraggio, controllo, tracciamento" — in un comunicato su geolocalizzazione</div></div>
+        <div class="card"><div class="cl">Toni da escludere</div><div class="cv">"Non usare tono difensivo o giustificativo" · "Evita linguaggio burocratico e passivo"</div></div>
+        <div class="card"><div class="cl">Contenuti da non includere</div><div class="cv">"Non citare sanzioni per i lavoratori" · "Non fare riferimento a precedenti conflitti"</div></div>
+        <div class="card"><div class="cl">Fonti non ammesse</div><div class="cv">"Non citare blog, articoli di stampa o fonti dottrinali non verificabili"</div></div>
+      </div>
+    </div>
+    <div class="box bx-giallo">
+      <h3>💡 Come individuarli</h3>
+      <p>Chiediti: "Cosa potrebbe produrre l'AI che sembrerebbe corretto ma che nel mio contesto è dannoso?" Quella risposta è il tuo vincolo negativo.</p>
+    </div>
+    <button class="btn-chiudi" onclick="closeModal('vincoln')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<!-- AMBIGUITÀ -->
+<div class="modal-overlay" id="modal-ambig">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#1a3a4a,#1a7cb0)">
+    <div><h2>❓ 7 · Gestione Ambiguità</h2><p>Cosa fare quando qualcosa non è chiaro</p></div>
+    <button class="btn-close" onclick="closeModal('ambig')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="box bx-blu">
+      <h3>📌 Il problema</h3>
+      <p>Se l'AI incontra un'informazione ambigua, tende a inventare una risposta plausibile invece di segnalare il problema. Questo è pericoloso in analisi normative e classificazioni di rischio.</p>
+    </div>
+    <div class="box bx-verde">
+      <h3>✅ Le istruzioni da includere sempre</h3>
+      <div class="cards">
+        <div class="card"><div class="cl">Istruzione base</div><div class="cv">"Se un'informazione è insufficiente, segnalalo prima di procedere e indica cosa ti manca."</div></div>
+        <div class="card"><div class="cl">Classificazione incerta</div><div class="cv">"In caso di classificazione incerta, segnala entrambe le ipotesi con motivazione."</div></div>
+        <div class="card"><div class="cl">Fonti assenti</div><div class="cv">"Se non trovi una fonte ufficiale a supporto, indicalo esplicitamente invece di omettere."</div></div>
+      </div>
+    </div>
+    <div class="box bx-giallo">
+      <h3>💡 Perché è importante per te</h3>
+      <p>Nel tuo contesto DPO e AI Act, una classificazione sbagliata perché l'AI ha "indovinato" può avere conseguenze legali reali. Istruire l'AI sull'incertezza è risk management.</p>
+    </div>
+    <button class="btn-chiudi" onclick="closeModal('ambig')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<!-- WORKFLOW -->
+<div class="modal-overlay" id="modal-workflow">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#4a3800,#b8860b)">
+    <div><h2>🔄 8 · Workflow</h2><p>Bozza · Approvazione · Output finale</p></div>
+    <button class="btn-close" onclick="closeModal('workflow')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="box bx-giallo">
+      <h3>📌 Perché funziona</h3>
+      <p>Il workflow iterativo evita di ricevere un output definitivo sbagliato. Costruisci un processo in due o tre fasi con un punto di controllo intermedio — e puoi correggere a metà percorso.</p>
+    </div>
+    <div class="box bx-verde">
+      <h3>✅ I tre modelli</h3>
+      <div class="cards">
+        <div class="card"><div class="cl">Bozza → Finale (2 fasi)</div><div class="cv">L'AI produce una bozza. Tu la rivedi e dai il via libera. L'AI produce la versione finale. Ideale per comunicati, email, documenti.</div></div>
+        <div class="card"><div class="cl">Analisi → Piano → Output (3 fasi)</div><div class="cv">Fase 1: analisi. Tu validi. Fase 2: piano. Tu validi. Fase 3: output. Ideale per compliance, report, analisi normative.</div></div>
+        <div class="card"><div class="cl">Chain prompting (prompt separati)</div><div class="cv">Ogni fase è un prompt distinto che usa l'output del precedente come input esplicito. Massimo controllo — per task complessi tipo AI Act.</div></div>
+      </div>
+    </div>
+    <div class="box bx-blu">
+      <h3>⚡ Formula da usare</h3>
+      <div class="prompt-box"><span class="val">Produci prima una bozza e attendi la mia approvazione. Solo dopo il mio via libera esplicito procedi con la versione finale.</span></div>
+    </div>
+    <div class="box bx-arancio">
+      <h3>⚠️ Chain prompting — regola chiave</h3>
+      <p>In una vera catena, il secondo prompt deve richiamare esplicitamente l'output del primo:</p>
+      <div class="prompt-box"><span class="val">"Sulla base dell'analisi che hai prodotto nella fase 1, procedi ora con..."</span></div>
+    </div>
+    <button class="btn-chiudi" onclick="closeModal('workflow')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<!-- ERRORI -->
+<div class="modal-overlay" id="modal-errori">
+ <div class="modal-box">
+  <div class="modal-head" style="background:linear-gradient(135deg,#2d1a4a,#6a3db0)">
+    <div><h2>⚠️ Errori Comuni</h2><p>I 6 errori che abbassano il voto</p></div>
+    <button class="btn-close" onclick="closeModal('errori')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="checklist">
+      <div class="chk-item"><div class="chk-ico">1️⃣</div><div class="chk-txt"><strong>Output non specificato</strong>"Documento Word" non basta. Specifica sempre: tipo, struttura, lunghezza, sezioni, destinatario.</div></div>
+      <div class="chk-item"><div class="chk-ico">2️⃣</div><div class="chk-txt"><strong>Nessun vincolo negativo</strong>Dire cosa fare senza dire cosa evitare produce output tecnicamente corretti ma inutilizzabili nel contesto.</div></div>
+      <div class="chk-item"><div class="chk-ico">3️⃣</div><div class="chk-txt"><strong>Prompt dipendente dal contesto</strong>Il prompt deve funzionare senza la storia della chat. Se tolgo tutto ciò che abbiamo scritto prima, l'AI capisce ancora?</div></div>
+      <div class="chk-item"><div class="chk-ico">4️⃣</div><div class="chk-txt"><strong>Nessuna istruzione sull'ambiguità</strong>Senza questa, l'AI inventa. In classificazioni AI Act e task legali questo è inaccettabile.</div></div>
+      <div class="chk-item"><div class="chk-ico">5️⃣</div><div class="chk-txt"><strong>Prompt lungo vs. chain prompting</strong>Un prompt con 3 fasi interne non è lo stesso di 3 prompt separati. Il chain prompting vero ti dà controllo su ogni passaggio.</div></div>
+      <div class="chk-item"><div class="chk-ico">6️⃣</div><div class="chk-txt"><strong>Ruolo generico</strong>"Agisci come esperto" non attiva nessun frame. Specifica sempre disciplina, specializzazione e punto di vista.</div></div>
+    </div>
+    <div class="box bx-verde" style="margin-top:4px">
+      <h3>✅ Checklist pre-invio</h3>
+      <ul>
+        <li>Ho definito un ruolo specifico?</li>
+        <li>Ho incluso le criticità di contesto?</li>
+        <li>Il compito è descritto con verbi d'azione precisi?</li>
+        <li>Ho specificato struttura, lunghezza e destinatario dell'output?</li>
+        <li>Ho incluso vincoli positivi E negativi?</li>
+        <li>Ho istruito l'AI sulla gestione dell'ambiguità?</li>
+        <li>Il prompt funziona senza il contesto pregresso della chat?</li>
+      </ul>
+    </div>
+    <button class="btn-chiudi" onclick="closeModal('errori')">✕ Chiudi</button>
+  </div>
+ </div>
+</div>
+
+<script>
+var TEMPLATE = "RUOLO:\nAgisci come [es. esperto HR senior / avvocato giuslavorista / DPO / consulente AI Act].\n\nCONTESTO:\n[Settore, dimensione azienda, situazione specifica, stakeholder coinvolti, criticità da tenere presente].\n\nCOMPITO:\n[Cosa deve produrre o analizzare l'AI. Se è una sequenza, elenca i passi in ordine].\n\nFORMATO OUTPUT:\n[Tipo documento · struttura attesa · lunghezza indicativa · sezioni obbligatorie].\n\nVINCOLI POSITIVI:\n[Tono richiesto e perché · riferimenti normativi · elementi obbligatori].\n\nVINCOLI NEGATIVI:\n[Cosa NON scrivere · termini da evitare · approcci da escludere].\n\nGESTIONE AMBIGUITÀ:\nSe un'informazione è insufficiente o un caso è classificabile in più modi, segnalalo prima di procedere. Non generalizzare: indica cosa ti manca.\n\nWORKFLOW:\nProduci prima una bozza. Attendi la mia approvazione prima di procedere con l'output finale.";
+
+function openModal(id) {
+  var el = document.getElementById("modal-" + id);
+  if (el) { el.classList.add("open"); document.body.style.overflow = "hidden"; }
+}
+function closeModal(id) {
+  var el = document.getElementById("modal-" + id);
+  if (el) { el.classList.remove("open"); document.body.style.overflow = ""; }
+}
+document.querySelectorAll(".modal-overlay").forEach(function(m) {
+  m.addEventListener("click", function(e) { if (e.target === m) { m.classList.remove("open"); document.body.style.overflow = ""; }});
+});
+
+function copiaTemplate() {
+  var btn = document.getElementById("btnCopia");
+  var lbl = document.getElementById("copiaTxt");
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(TEMPLATE).then(function() {
+      btn.classList.add("copiato");
+      lbl.textContent = "✓ Copiato — incollalo nella chat";
+      setTimeout(function() { btn.classList.remove("copiato"); lbl.textContent = "📋 Copia il template"; }, 2800);
+    }).catch(function() { fallbackCopia(); });
+  } else { fallbackCopia(); }
+}
+function fallbackCopia() {
+  var ta = document.createElement("textarea");
+  ta.value = TEMPLATE; ta.style.cssText = "position:fixed;opacity:0;top:0;left:0;";
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  ta.setSelectionRange(0, ta.value.length);
+  try { document.execCommand("copy"); feedbackCopia(); } catch(e){}
+  document.body.removeChild(ta);
+}
+function feedbackCopia() {
+  var btn = document.getElementById("btnCopia");
+  var lbl = document.getElementById("copiaTxt");
+  btn.classList.add("copiato");
+  lbl.textContent = "✓ Copiato — incollalo nella chat";
+  setTimeout(function() { btn.classList.remove("copiato"); lbl.textContent = "📋 Copia il template"; }, 2800);
+}
+</script>
+</body>
+</html>
